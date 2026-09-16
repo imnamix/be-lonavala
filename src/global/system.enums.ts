@@ -1,0 +1,30 @@
+export enum userRoles {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  CONTENT_ADMIN = 'CONTENT_ADMIN',
+  CONTENT_EDITOR = 'CONTENT_EDITOR',
+  GRIEVANCE_OFFICER = 'GRIEVANCE_OFFICER',
+  DEPARTMENT_ADMIN = 'DEPARTMENT_ADMIN',
+  DEPARTMENT_OFFICER = 'DEPARTMENT_OFFICER',
+  REPORTING_USER = 'REPORTING_USER',
+}
+
+export enum gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
+export enum templateType {
+  EMAIL = 'EMAIL',
+  SMS = 'SMS',
+  APP_NOTIFICATION = 'APP_NOTIFICATION',
+  PDF = 'PDF',
+}
+
+export enum permissions {
+  READ = 'READ',
+  WRITE = 'WRITE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  MANAGE = 'MANAGE',
+}
