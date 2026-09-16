@@ -17,6 +17,8 @@ import { HealthModule } from './health/health.module';
 import { HomepageModule } from './homepage/homepage.module';
 import { AboutUsModule } from './about-us/about-us.module';
 import { StorageModule } from './storage/storage.module';
+import { TourismModule } from './tourism/tourism.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
@@ -88,6 +90,8 @@ import { StorageModule } from './storage/storage.module';
     StorageModule,
     HomepageModule,
     AboutUsModule,
+    TourismModule,
+    ContactsModule,
   ],
   providers: [AppService],
   controllers: [AppController],

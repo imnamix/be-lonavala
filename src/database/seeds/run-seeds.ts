@@ -1,6 +1,8 @@
 import { AppDataSource } from '../../config/typeorm.config';
 import { seedHomepage } from './homepage.seed';
 import { seedAboutUs } from './about-us.seed';
+import { seedTourism } from './tourism.seed';
+import { seedContacts } from './contacts.seed';
 
 async function runSeeds() {
   console.log('🌱 Initializing Database Connection for Seeding...');
@@ -13,6 +15,12 @@ async function runSeeds() {
 
     console.log('🌱 Running About Us Seed...');
     await seedAboutUs(AppDataSource);
+
+    console.log('🌱 Running Tourism Seed...');
+    await seedTourism(AppDataSource);
+
+    console.log('🌱 Running Contacts & Council Members Seed...');
+    await seedContacts(AppDataSource);
 
     console.log('🎉 All seeds completed successfully!');
   } catch (error) {

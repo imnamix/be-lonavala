@@ -1,69 +1,74 @@
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FileUploadDto } from './upload.dto';
-import { Injectable, Req, Res } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
 import { Repository } from 'typeorm';
 import { EN_Upload } from './fileUpload.entity';
-import { v4 as uuid } from 'uuid';
-import { Exception } from 'handlebars';
-import { NotFoundError } from 'rxjs';
-import { Console } from 'console';
-import { S3Service } from './s3.service';
+import { StorageService } from '../storage/storage.service';
+import { validateUploadedFile } from '../storage/file-validation.util';
 
 @Injectable()
 export class UploadService {
   constructor(
     @InjectRepository(EN_Upload)
     private readonly fileUploadRepo: Repository<EN_Upload>,
-    private readonly s3service: S3Service,
+    private readonly storageService: StorageService,
   ) {}
 
-  async uploadDocs(docs: any) {
-    let savedDocs: any = [];
-    const maxSizeInBytes = 5 * 1024 * 1024;
-    let mimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+  async uploadSingleFile(
+    file: Express.Multer.File,
+    folder = 'uploads',
+    title?: string,
+  ): Promise<EN_Upload> {
+    if (!file) {
+      throw new BadRequestException('No file provided for upload');
+    }
 
-    // if (!docs) {
-    //   throw new DocsNotFoundException();
-    // }
+    validateUploadedFile({
+      mimetype: file.mimetype,
+      size: file.size,
+      originalname: file.originalname,
+    });
 
-    //CHECKS FILE SIZE AND TYPE
-    // for (const doc of docs) {
-    //   if (doc.size >= maxSizeInBytes) {
-    //     throw new DocFileSizeException();
-    //   } else if (!mimeTypes.includes(doc.mimetype)) {
-    //     throw new FileTypeNotSupportedException();
-    //   }
-    // }
+    const result = await this.storageService.uploadFile(file, folder);
 
-    // if (!docs) {
-    //  return NotFoundError;
-    // }
+    const uploadRecord = this.fileUploadRepo.create({
+      fileName: file.originalname,
+      fileSize: file.size,
+      fileType: file.mimetype,
+      fileTitle: title || file.originalname,
+      bucket: result.bucket,
+      fileUrl: result.url,
+      key: result.key,
+    });
 
-    let details = {
-      for: 'docs',
-      uId: uuid(),
-    };
+    return this.fileUploadRepo.save(uploadRecord);
+  }
 
-    // let uploadedDocs = await this.s3service.uploadFiles(docs, details);
-    // await Promise.all(
-    //   uploadedDocs.map(async (doc: any) => {
-    //     let extFileData: any = {
-    //       bucketFileId: doc.objectId,
-    //       fileName: doc.fileName,
-    //       fileUrl: doc.fileUrl,
-    //       fileType: doc.mimetype,
-    //       fileSize: doc.size,
-    //       fileTitle: doc.fileName,
-    //       key: doc.key,
-    //       bucket: process.env.BUCKET,
-    //     };
+  async uploadMultipleFiles(
+    files: Express.Multer.File[],
+    folder = 'uploads',
+  ): Promise<EN_Upload[]> {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files provided for upload');
+    }
 
-    //     const newSaveDoc = this.fileUploadRepo.create(extFileData);
-    //     const savedDoc: any = await this.fileUploadRepo.save(newSaveDoc);
-    //     savedDocs.push(savedDoc);
-    //   }),
-    // );
-    return savedDocs;
+    const savedRecords: EN_Upload[] = [];
+    for (const file of files) {
+      const record = await this.uploadSingleFile(file, folder);
+      savedRecords.push(record);
+    }
+
+    return savedRecords;
+  }
+
+  async getAllUploads(): Promise<EN_Upload[]> {
+    return this.fileUploadRepo.find({ order: { id: 'DESC' } });
+  }
+
+  async getUploadById(id: number): Promise<EN_Upload> {
+    const record = await this.fileUploadRepo.findOne({ where: { id } });
+    if (!record) {
+      throw new BadRequestException(`Upload record with ID ${id} not found`);
+    }
+    return record;
   }
 }

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { TextMessageService } from './services/text-message.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailService } from './services/mail.service';
-import { templateType } from 'src/global/system.enums';
+import { templateType } from '../global/system.enums';
 
 @Injectable()
 export class CommunicationService {

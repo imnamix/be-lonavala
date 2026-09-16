@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CommunicationController } from './communication.controller';
 import { CommunicationService } from './communication.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EN_Template } from 'src/template/entity/template.entity';
+import { EN_Template } from '../template/entity/template.entity';
 
 @Module({
   imports: [

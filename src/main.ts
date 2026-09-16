@@ -79,6 +79,9 @@ async function bootstrap() {
     .addTag('Health', 'API health and readiness checks')
     .addTag('Homepage', 'Homepage content — slides, announcements')
     .addTag('About Us', 'About the council, mission, vision, communique')
+    .addTag('Tourism', 'Tourism spots, highlights, gallery, and travel guides')
+    .addTag('Contacts & Council Members', 'Elected representatives, corporators, and municipal emergency helplines')
+    .addTag('File Uploads', 'Cloudflare R2 and file management')
     .addTag('Auth', 'Authentication endpoints')
     .addTag('Users', 'User management')
     .addBearerAuth(

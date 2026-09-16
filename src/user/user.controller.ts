@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { AuthGuard } from '../auth/guards/auth.gaurd';
 import { RoleGuard } from '../auth/guards/role.gaurd';
 import { Roles } from '../decorator/role.decorator';
-import { userRoles } from 'src/global/system.enums';
+import { userRoles } from '../global/system.enums';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
