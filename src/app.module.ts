@@ -19,6 +19,7 @@ import { AboutUsModule } from './about-us/about-us.module';
 import { StorageModule } from './storage/storage.module';
 import { TourismModule } from './tourism/tourism.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { FaqModule } from './faq/faq.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { ContactsModule } from './contacts/contacts.module';
     AboutUsModule,
     TourismModule,
     ContactsModule,
+    FaqModule,
   ],
   providers: [AppService],
   controllers: [AppController],

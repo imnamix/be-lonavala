@@ -41,4 +41,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Uploads temp
+/public
+/public/uploads
 /public/gallery

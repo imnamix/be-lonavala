@@ -3,6 +3,7 @@ import { seedHomepage } from './homepage.seed';
 import { seedAboutUs } from './about-us.seed';
 import { seedTourism } from './tourism.seed';
 import { seedContacts } from './contacts.seed';
+import { seedFaqs } from './faq.seed';
 
 async function runSeeds() {
   console.log('🌱 Initializing Database Connection for Seeding...');
@@ -21,6 +22,9 @@ async function runSeeds() {
 
     console.log('🌱 Running Contacts & Council Members Seed...');
     await seedContacts(AppDataSource);
+
+    console.log('🌱 Running FAQ Seed...');
+    await seedFaqs(AppDataSource);
 
     console.log('🎉 All seeds completed successfully!');
   } catch (error) {
