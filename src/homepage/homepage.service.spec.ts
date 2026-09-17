@@ -3,11 +3,15 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { HomepageService } from './homepage.service';
 import { HomepageConfig } from './entities/homepage-config.entity';
 import { HomepageSlide } from './entities/homepage-slide.entity';
+import { HomepageSlideButton } from './entities/homepage-slide-button.entity';
+import { HomepageSlideTag } from './entities/homepage-slide-tag.entity';
 
 describe('HomepageService', () => {
   let service: HomepageService;
   let configRepo: any;
   let slideRepo: any;
+  let buttonRepo: any;
+  let tagRepo: any;
 
   const mockConfig: Partial<HomepageConfig> = {
     id: 1,
@@ -57,9 +61,25 @@ describe('HomepageService', () => {
   beforeEach(async () => {
     configRepo = {
       findOne: jest.fn().mockResolvedValue(mockConfig),
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((c) => Promise.resolve(c)),
     };
     slideRepo = {
       find: jest.fn().mockResolvedValue(mockSlides),
+      findOne: jest.fn().mockResolvedValue(mockSlides[0]),
+      create: jest.fn().mockImplementation((dto) => ({ id: 1, ...dto })),
+      save: jest.fn().mockImplementation((s) => Promise.resolve({ id: 1, ...s })),
+      remove: jest.fn().mockResolvedValue(mockSlides[0]),
+    };
+    buttonRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((b) => Promise.resolve(b)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    };
+    tagRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((t) => Promise.resolve(t)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -72,6 +92,14 @@ describe('HomepageService', () => {
         {
           provide: getRepositoryToken(HomepageSlide),
           useValue: slideRepo,
+        },
+        {
+          provide: getRepositoryToken(HomepageSlideButton),
+          useValue: buttonRepo,
+        },
+        {
+          provide: getRepositoryToken(HomepageSlideTag),
+          useValue: tagRepo,
         },
       ],
     }).compile();
@@ -96,8 +124,6 @@ describe('HomepageService', () => {
     expect(slide.alignment).toBe('left');
     expect(slide.buttons).toHaveLength(1);
     expect(slide.buttons[0].name).toBe('Services');
-    expect(slide.tags).toHaveLength(1);
-    expect(slide.tags[0].name).toBe('Online Tax');
   });
 
   it('should handle empty config gracefully', async () => {

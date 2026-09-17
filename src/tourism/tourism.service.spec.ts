@@ -2,10 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { TourismService } from './tourism.service';
 import { TourismSpot } from './entities/tourism-spot.entity';
+import { TourismImportantPoint } from './entities/tourism-important-point.entity';
+import { TourismHighlight } from './entities/tourism-highlight.entity';
+import { TourismGalleryMedia } from './entities/tourism-gallery-media.entity';
 
 describe('TourismService', () => {
   let service: TourismService;
   let spotRepo: any;
+  let pointRepo: any;
+  let highlightRepo: any;
+  let galleryRepo: any;
 
   const mockSpots = [
     {
@@ -37,6 +43,25 @@ describe('TourismService', () => {
   beforeEach(async () => {
     spotRepo = {
       find: jest.fn().mockResolvedValue(mockSpots),
+      findOne: jest.fn().mockResolvedValue(mockSpots[0]),
+      create: jest.fn().mockImplementation((dto) => ({ id: 1, ...dto })),
+      save: jest.fn().mockImplementation((s) => Promise.resolve({ id: 1, ...s })),
+      remove: jest.fn().mockResolvedValue(mockSpots[0]),
+    };
+    pointRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((p) => Promise.resolve(p)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    };
+    highlightRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((h) => Promise.resolve(h)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    };
+    galleryRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((g) => Promise.resolve(g)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -45,6 +70,18 @@ describe('TourismService', () => {
         {
           provide: getRepositoryToken(TourismSpot),
           useValue: spotRepo,
+        },
+        {
+          provide: getRepositoryToken(TourismImportantPoint),
+          useValue: pointRepo,
+        },
+        {
+          provide: getRepositoryToken(TourismHighlight),
+          useValue: highlightRepo,
+        },
+        {
+          provide: getRepositoryToken(TourismGalleryMedia),
+          useValue: galleryRepo,
         },
       ],
     }).compile();

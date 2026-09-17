@@ -4,6 +4,12 @@ import { Repository } from 'typeorm';
 import { CouncilMember } from './entities/council-member.entity';
 import { OfficeContact } from './entities/office-contact.entity';
 import { CouncilMemberDto, OfficeContactDto } from './dto/council-member.dto';
+import {
+  CreateCouncilMemberDto,
+  UpdateCouncilMemberDto,
+  CreateOfficeContactDto,
+  UpdateOfficeContactDto,
+} from './dto/contacts-mutation.dto';
 
 @Injectable()
 export class ContactsService {
@@ -60,6 +66,12 @@ export class ContactsService {
     };
   }
 
+  async getAllCouncilMembers(): Promise<CouncilMember[]> {
+    return this.councilMemberRepo.find({
+      order: { sortOrder: 'ASC', id: 'ASC' },
+    });
+  }
+
   async getCouncilMemberById(id: number): Promise<CouncilMemberDto> {
     const member = await this.councilMemberRepo.findOne({
       where: { id },
@@ -70,6 +82,29 @@ export class ContactsService {
     }
 
     return this.mapCouncilMember(member);
+  }
+
+  async createCouncilMember(dto: CreateCouncilMemberDto): Promise<CouncilMemberDto> {
+    const member = this.councilMemberRepo.create(dto);
+    const saved = await this.councilMemberRepo.save(member);
+    return this.mapCouncilMember(saved);
+  }
+
+  async updateCouncilMember(
+    id: number,
+    dto: UpdateCouncilMemberDto,
+  ): Promise<CouncilMemberDto> {
+    await this.getCouncilMemberById(id);
+    await this.councilMemberRepo.update(id, dto);
+    return this.getCouncilMemberById(id);
+  }
+
+  async deleteCouncilMember(id: number): Promise<void> {
+    const member = await this.councilMemberRepo.findOne({ where: { id } });
+    if (!member) {
+      throw new NotFoundException(`Council member with ID ${id} not found`);
+    }
+    await this.councilMemberRepo.remove(member);
   }
 
   async getContacts(): Promise<{
@@ -95,5 +130,42 @@ export class ContactsService {
         officeContacts: contacts.map((c) => this.mapOfficeContact(c)),
       },
     };
+  }
+
+  async getAllOfficeContacts(): Promise<OfficeContact[]> {
+    return this.officeContactRepo.find({
+      order: { sortOrder: 'ASC', id: 'ASC' },
+    });
+  }
+
+  async getOfficeContactById(id: number): Promise<OfficeContactDto> {
+    const contact = await this.officeContactRepo.findOne({ where: { id } });
+    if (!contact) {
+      throw new NotFoundException(`Office contact with ID ${id} not found`);
+    }
+    return this.mapOfficeContact(contact);
+  }
+
+  async createOfficeContact(dto: CreateOfficeContactDto): Promise<OfficeContactDto> {
+    const contact = this.officeContactRepo.create(dto);
+    const saved = await this.officeContactRepo.save(contact);
+    return this.mapOfficeContact(saved);
+  }
+
+  async updateOfficeContact(
+    id: number,
+    dto: UpdateOfficeContactDto,
+  ): Promise<OfficeContactDto> {
+    await this.getOfficeContactById(id);
+    await this.officeContactRepo.update(id, dto);
+    return this.getOfficeContactById(id);
+  }
+
+  async deleteOfficeContact(id: number): Promise<void> {
+    const contact = await this.officeContactRepo.findOne({ where: { id } });
+    if (!contact) {
+      throw new NotFoundException(`Office contact with ID ${id} not found`);
+    }
+    await this.officeContactRepo.remove(contact);
   }
 }

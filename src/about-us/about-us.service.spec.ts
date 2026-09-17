@@ -2,10 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { AboutUsService } from './about-us.service';
 import { AboutUs } from './entities/about-us.entity';
+import { AboutUsMissionItem } from './entities/about-us-mission-item.entity';
+import { AboutUsCommunique } from './entities/about-us-communique.entity';
 
 describe('AboutUsService', () => {
   let service: AboutUsService;
   let aboutUsRepo: any;
+  let missionRepo: any;
+  let communiqueRepo: any;
 
   const mockAboutUs = {
     id: 1,
@@ -37,6 +41,18 @@ describe('AboutUsService', () => {
   beforeEach(async () => {
     aboutUsRepo = {
       findOne: jest.fn().mockResolvedValue(mockAboutUs),
+      create: jest.fn().mockImplementation((dto) => ({ id: 1, ...dto })),
+      save: jest.fn().mockImplementation((a) => Promise.resolve({ id: 1, ...a })),
+    };
+    missionRepo = {
+      create: jest.fn().mockImplementation((dto) => dto),
+      save: jest.fn().mockImplementation((m) => Promise.resolve(m)),
+      delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    };
+    communiqueRepo = {
+      findOne: jest.fn().mockResolvedValue(mockAboutUs.communique),
+      create: jest.fn().mockImplementation((dto) => ({ id: 1, ...dto })),
+      save: jest.fn().mockImplementation((c) => Promise.resolve({ id: 1, ...c })),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -45,6 +61,14 @@ describe('AboutUsService', () => {
         {
           provide: getRepositoryToken(AboutUs),
           useValue: aboutUsRepo,
+        },
+        {
+          provide: getRepositoryToken(AboutUsMissionItem),
+          useValue: missionRepo,
+        },
+        {
+          provide: getRepositoryToken(AboutUsCommunique),
+          useValue: communiqueRepo,
         },
       ],
     }).compile();
