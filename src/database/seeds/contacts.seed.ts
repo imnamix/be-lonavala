@@ -1,14 +1,79 @@
 import { DataSource } from 'typeorm';
 import { CouncilMember } from '../../contacts/entities/council-member.entity';
 import { OfficeContact } from '../../contacts/entities/office-contact.entity';
+import { ContactsConfig } from '../../contacts/entities/contacts-config.entity';
+import { EmergencyContact } from '../../contacts/entities/emergency-contact.entity';
 
 export async function seedContacts(dataSource: DataSource): Promise<void> {
+  const configRepo = dataSource.getRepository(ContactsConfig);
+  const emergencyRepo = dataSource.getRepository(EmergencyContact);
   const memberRepo = dataSource.getRepository(CouncilMember);
   const contactRepo = dataSource.getRepository(OfficeContact);
 
+  // 1. Seed Contacts Config (WhatsApp helpline + HQ)
+  const configCount = await configRepo.count();
+  if (configCount === 0) {
+    await configRepo.save(
+      configRepo.create({
+        whatsappHelpline: '+91 94235 88990',
+        complexName: 'Administrative Complex',
+        addressLine1: 'Old Mumbai-Pune Highway, Near Kumar Resort',
+        addressLine2: 'Lonavala, Dist. Pune, Maharashtra',
+        pinCode: '410401',
+        epabxPhones: '+91 2114 273030 / 273031 / 273032',
+        officialEmail: 'contact@lonavalamc.gov.in',
+        coEmail: 'co@lonavalamc.gov.in',
+        workingHours: 'Monday to Saturday: 09:45 AM – 05:45 PM',
+        workingHoursNote: '(Closed on 2nd & 4th Saturdays and Public Holidays)',
+        mapEmbedUrl: '',
+      }),
+    );
+    console.log('✅ Seeded Contacts Config (WhatsApp helpline & HQ)');
+  }
+
+  // 2. Seed Emergency Hotlines
+  const emergencyCount = await emergencyRepo.count();
+  if (emergencyCount === 0) {
+    await emergencyRepo.save([
+      emergencyRepo.create({
+        name: '24x7 Municipal Disaster Control Room',
+        number: '1800-233-0101',
+        icon: 'ShieldAlert',
+        category: 'emergency',
+        sortOrder: 1,
+        active: true,
+      }),
+      emergencyRepo.create({
+        name: 'Lonavala Fire & Rescue Brigade',
+        number: '101 / +91 2114 273101',
+        icon: 'Flame',
+        category: 'emergency',
+        sortOrder: 2,
+        active: true,
+      }),
+      emergencyRepo.create({
+        name: 'Lonavala City Police Station',
+        number: '100 / +91 2114 273033',
+        icon: 'Siren',
+        category: 'emergency',
+        sortOrder: 3,
+        active: true,
+      }),
+      emergencyRepo.create({
+        name: 'Municipal General Ambulance & Medical',
+        number: '108 / +91 2114 273111',
+        icon: 'Ambulance',
+        category: 'emergency',
+        sortOrder: 4,
+        active: true,
+      }),
+    ]);
+    console.log('✅ Seeded 4 Emergency Hotlines');
+  }
+
+  // 3. Seed Council Members
   const memberCount = await memberRepo.count();
   if (memberCount === 0) {
-    // 1. President
     await memberRepo.save([
       memberRepo.create({
         name: 'Smt. Surekha Nitin Jadhav',
@@ -110,6 +175,7 @@ export async function seedContacts(dataSource: DataSource): Promise<void> {
     console.log('✅ Seeded 6 Council Members');
   }
 
+  // 4. Seed Office Contacts
   const contactCount = await contactRepo.count();
   if (contactCount === 0) {
     await contactRepo.save([
@@ -157,6 +223,6 @@ export async function seedContacts(dataSource: DataSource): Promise<void> {
         active: true,
       }),
     ]);
-    console.log('✅ Seeded 4 Office & Emergency Contacts');
+    console.log('✅ Seeded 4 Office & Department Contacts');
   }
 }

@@ -19,6 +19,9 @@ import { AboutUsModule } from './about-us/about-us.module';
 import { StorageModule } from './storage/storage.module';
 import { TourismModule } from './tourism/tourism.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { CouncilModule } from './council/council.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { FaqModule } from './faq/faq.module';
 
 @Module({
   imports: [
@@ -52,7 +55,8 @@ import { ContactsModule } from './contacts/contacts.module';
         synchronize: false, // NEVER true in production — use migrations
         logging: configService.get<string>('NODE_ENV') === 'development',
         ssl:
-          configService.get<string>('NODE_ENV') === 'production'
+          configService.get<string>('NODE_ENV') === 'production' ||
+          configService.get<string>('DB_SSL') === 'true'
             ? { rejectUnauthorized: false }
             : false,
       }),
@@ -92,6 +96,9 @@ import { ContactsModule } from './contacts/contacts.module';
     AboutUsModule,
     TourismModule,
     ContactsModule,
+    CouncilModule,
+    CloudinaryModule,
+    FaqModule,
   ],
   providers: [AppService],
   controllers: [AppController],

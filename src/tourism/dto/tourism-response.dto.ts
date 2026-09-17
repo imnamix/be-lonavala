@@ -1,6 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ImportantPointDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'Clock' })
   icon: string;
 
@@ -8,17 +11,29 @@ export class ImportantPointDto {
     example: 'Best time to visit: 5:30 AM – 7:00 PM during Monsoons',
   })
   text: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class HighlightDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'Timing' })
   key: string;
 
   @ApiProperty({ example: '6:00 AM – 6:30 PM' })
   value: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class GalleryMediaDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({
     example:
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
@@ -27,9 +42,15 @@ export class GalleryMediaDto {
 
   @ApiProperty({ example: 'image', enum: ['image', 'video'] })
   mediaType: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class TourismSpotDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
   @ApiProperty({ example: 'Tiger Point (Lions Point)' })
   name: string;
 
@@ -51,6 +72,12 @@ export class TourismSpotDto {
   })
   description: string;
 
+  @ApiProperty({ example: 0 })
+  sortOrder: number;
+
+  @ApiProperty({ example: true })
+  active: boolean;
+
   @ApiProperty({ type: [ImportantPointDto] })
   importantPoints: ImportantPointDto[];
 
@@ -60,8 +87,11 @@ export class TourismSpotDto {
   @ApiProperty({ type: [GalleryMediaDto] })
   galleryMedia: GalleryMediaDto[];
 
-  @ApiProperty({ example: true })
-  active: boolean;
+  @ApiPropertyOptional()
+  createdDate?: Date;
+
+  @ApiPropertyOptional()
+  updatedDate?: Date;
 }
 
 export class TourismResponseDto {

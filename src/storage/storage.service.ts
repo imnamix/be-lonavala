@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CloudflareR2Provider } from './r2.provider';
 import { AwsS3Provider } from './s3.provider';
 import { LocalDiskProvider } from './local.provider';
+import { CloudinaryStorageProvider } from './cloudinary.provider';
 import { StorageProvider, UploadResult } from './storage.interface';
 import {
   validateUploadedFile,
@@ -19,12 +20,16 @@ export class StorageService implements StorageProvider {
     private readonly r2Provider: CloudflareR2Provider,
     private readonly s3Provider: AwsS3Provider,
     private readonly localProvider: LocalDiskProvider,
+    private readonly cloudinaryProvider: CloudinaryStorageProvider,
   ) {
     const provider = this.configService
       .get<string>('STORAGE_PROVIDER', 'r2')
       .toLowerCase();
 
-    if (provider === 's3') {
+    if (provider === 'cloudinary') {
+      this.activeProvider = this.cloudinaryProvider;
+      this.logger.log('Active storage provider: Cloudinary');
+    } else if (provider === 's3') {
       this.activeProvider = this.s3Provider;
       this.logger.log('Active storage provider: AWS S3');
     } else if (provider === 'local') {

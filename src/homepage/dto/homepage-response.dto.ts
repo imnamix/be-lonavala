@@ -1,23 +1,32 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SlideButtonDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'Pay Property Tax' })
   name: string;
 
   @ApiProperty({ example: '/services#property-tax' })
   url: string;
 
-  @ApiProperty({ example: 'Building2' })
+  @ApiProperty({ example: 'DollarSign' })
   icon: string;
 
-  @ApiProperty({ example: 'primary' })
+  @ApiProperty({ example: 'Emerald' })
   color: string;
 
   @ApiProperty({ example: true })
   active: boolean;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class SlideTagDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'Property Tax' })
   name: string;
 
@@ -26,9 +35,15 @@ export class SlideTagDto {
 
   @ApiProperty({ example: true })
   active: boolean;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class HomepageSlideDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'Gateway to Hill Station Governance' })
   slideTitle: string;
 
@@ -83,6 +98,9 @@ export class HomepageSlideDto {
 
   @ApiProperty({ example: true })
   active: boolean;
+
+  @ApiPropertyOptional({ example: 1 })
+  sortOrder?: number;
 }
 
 export class HomepageContentDto {

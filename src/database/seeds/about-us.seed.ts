@@ -29,7 +29,7 @@ export async function seedAboutUs(dataSource: DataSource): Promise<void> {
 
     // 2. Create About Us Main Record
     const aboutUs = aboutUsRepo.create({
-      title: 'Lonavala Municipal Council (लोणावळा नगर परिषद)',
+      title: 'Lonavala Municipal Council ',
       establishedYear: '1877',
       yearsOfService: '147+ Years',
       elevation: '622 m (2,041 ft)',

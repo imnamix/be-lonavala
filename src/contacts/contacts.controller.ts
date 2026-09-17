@@ -1,22 +1,19 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Put, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ContactsService } from './contacts.service';
-import {
-  ContactsResponseDto,
-  CouncilMembersResponseDto,
-  CouncilMemberDto,
-} from './dto/council-member.dto';
+import { ContactsResponseDto } from './dto/contacts-response.dto';
+import { UpdateContactsDto } from './dto/update-contacts.dto';
 
-@ApiTags('Contacts & Council Members')
-@Controller()
+@ApiTags('Contacts & Helpdesk')
+@Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
-  @Get('contacts')
+  @Get()
   @ApiOperation({
-    summary: 'Get all municipal contacts (council members + emergency/office contacts)',
+    summary: 'Get all contacts, 24x7 emergency helplines, municipal HQ, and council directory',
     description:
-      'Public endpoint returning council leadership, ward corporators, and municipal helpdesk/emergency telephone lines.',
+      'Public endpoint returning WhatsApp helpline, emergency hotlines, municipal headquarters & office hours, council members, and department telephone extensions.',
   })
   @ApiResponse({
     status: 200,
@@ -31,36 +28,23 @@ export class ContactsController {
     };
   }
 
-  @Get('council-members')
+  @Put()
   @ApiOperation({
-    summary: 'Get all active council members (President, Vice President, Corporators)',
+    summary: 'Update contacts, WhatsApp helpline, emergency hotlines, and municipal HQ details',
     description:
-      'Public endpoint returning the elected and administrative representatives of Lonavala Municipal Council.',
+      'Admin endpoint to update WhatsApp helpline, emergency hotlines, office details, timings, and map URL.',
   })
+  @ApiBody({ type: UpdateContactsDto })
   @ApiResponse({
     status: 200,
-    description: 'Council members retrieved successfully',
-    type: CouncilMembersResponseDto,
+    description: 'Contacts updated successfully',
+    type: ContactsResponseDto,
   })
-  async getCouncilMembers() {
-    const data = await this.contactsService.getCouncilMembers();
+  async updateContacts(@Body() updateDto: UpdateContactsDto) {
+    const data = await this.contactsService.updateContacts(updateDto);
     return {
       success: true,
-      data,
-    };
-  }
-
-  @Get('council-members/:id')
-  @ApiOperation({ summary: 'Get a council member by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Council member details retrieved',
-    type: CouncilMemberDto,
-  })
-  async getCouncilMemberById(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.contactsService.getCouncilMemberById(id);
-    return {
-      success: true,
+      message: 'Contacts and helpdesk details updated successfully',
       data,
     };
   }

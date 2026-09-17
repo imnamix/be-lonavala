@@ -12,39 +12,42 @@ export class OfficeContact {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: '24x7 Disaster Control Room' })
+  @ApiProperty({ description: 'Contact / department title' })
   @Column({ type: 'varchar', length: 200 })
   title: string;
 
-  @ApiProperty({ example: '1800-233-0101' })
+  @ApiProperty({ description: 'Primary contact phone' })
   @Column({ type: 'varchar', length: 50 })
   phone: string;
 
-  @ApiProperty({ example: '+91 2114 273030', required: false })
-  @Column({ type: 'varchar', length: 50, nullable: true, default: null })
+  @ApiProperty({ description: 'Alternative phone number', nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   altPhone: string;
 
-  @ApiProperty({ example: 'controlroom@lonavalamc.gov.in', required: false })
-  @Column({ type: 'varchar', length: 150, nullable: true, default: null })
+  @ApiProperty({ description: 'Official email address', nullable: true })
+  @Column({ type: 'varchar', length: 150, nullable: true })
   email: string;
 
-  @ApiProperty({ example: 'Ground Floor, LMC Administrative Complex', required: false })
-  @Column({ type: 'varchar', length: 300, nullable: true, default: null })
+  @ApiProperty({ description: 'Office room / physical location', nullable: true })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   location: string;
 
-  @ApiProperty({ example: '24 Hours / 7 Days a Week', required: false })
+  @ApiProperty({ description: 'Office operating hours / availability', nullable: true, default: '24x7' })
   @Column({ type: 'varchar', length: 100, nullable: true, default: '24x7' })
   timing: string;
 
-  @ApiProperty({ example: 'emergency', enum: ['emergency', 'administrative', 'helpline'] })
+  @ApiProperty({
+    description: 'Category (emergency, administrative, department, etc.)',
+    default: 'administrative',
+  })
   @Column({ type: 'varchar', length: 50, default: 'administrative' })
   category: string;
 
-  @ApiProperty({ default: 0 })
-  @Column({ type: 'int', default: 0 })
+  @ApiProperty({ description: 'Display sort order', default: 0 })
+  @Column({ type: 'integer', default: 0 })
   sortOrder: number;
 
-  @ApiProperty({ default: true })
+  @ApiProperty({ description: 'Whether active and visible', default: true })
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
