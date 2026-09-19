@@ -22,6 +22,8 @@ import { ContactsModule } from './contacts/contacts.module';
 import { CouncilModule } from './council/council.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { FaqModule } from './faq/faq.module';
+import { NoticeModule } from './notice/notice.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -99,6 +101,8 @@ import { FaqModule } from './faq/faq.module';
     CouncilModule,
     CloudinaryModule,
     FaqModule,
+    NoticeModule,
+    ProjectModule,
   ],
   providers: [AppService],
   controllers: [AppController],
