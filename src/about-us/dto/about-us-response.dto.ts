@@ -4,7 +4,7 @@ export class CommuniqueDto {
   @ApiProperty({ example: 'Shri. Pandit Patil (IAS/State Cadre)' })
   officerName: string;
 
-  @ApiProperty({ example: 'Chief Officer / Commissioner (मुख्याधिकारी)' })
+  @ApiProperty({ example: 'Chief Officer  (मुख्याधिकारी)' })
   designation: string;
 
   @ApiProperty({ example: '+91 2114 273032' })

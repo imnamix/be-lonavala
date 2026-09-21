@@ -13,7 +13,7 @@ export class UpdateCommuniqueDto {
   @IsString()
   officerName?: string;
 
-  @ApiProperty({ required: false, example: 'Chief Officer / Commissioner (मुख्याधिकारी)' })
+  @ApiProperty({ required: false, example: 'Chief Officer  (मुख्याधिकारी)' })
   @IsOptional()
   @IsString()
   designation?: string;

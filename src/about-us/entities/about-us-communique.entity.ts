@@ -19,7 +19,7 @@ export class AboutUsCommunique {
   officerName: string;
 
   @ApiProperty({
-    example: 'Chief Officer / Commissioner (मुख्याधिकारी)',
+    example: 'Chief Officer  (मुख्याधिकारी)',
   })
   @Column({ type: 'varchar', length: 200, default: '' })
   designation: string;

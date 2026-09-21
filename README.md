@@ -260,7 +260,7 @@ npm run migration:show
       ],
       "communique": {
         "officerName": "Shri. Pandit Patil (IAS/State Cadre)",
-        "designation": "Chief Officer / Commissioner (मुख्याधिकारी)",
+        "designation": "Chief Officer  (मुख्याधिकारी)",
         "phone": "+91 2114 273032",
         "email": "co@lonavalamc.gov.in",
         "mediaUrl": "https://images.unsplash.com/photo-...",

@@ -13,7 +13,7 @@ export async function seedAboutUs(dataSource: DataSource): Promise<void> {
     // 1. Create Chief Officer Communique
     const communique = communiqueRepo.create({
       officerName: 'Shri. Pandit Patil (IAS/State Cadre)',
-      designation: 'Chief Officer / Commissioner (मुख्याधिकारी)',
+      designation: 'Chief Officer  (मुख्याधिकारी)',
       phone: '+91 2114 273032',
       email: 'co@lonavalamc.gov.in',
       mediaUrl:
