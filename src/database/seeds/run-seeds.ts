@@ -8,6 +8,9 @@ import { seedGlance } from './glance.seed';
 import { seedNotices } from './notice.seed';
 import { seedProjects } from './project.seed';
 import { seedDepartments } from './department.seed';
+import { seedCourtMembers } from './court-member.seed';
+import { seedCourtProceedings } from './court-proceeding.seed';
+import { seedCourtSessions } from './court-session.seed';
 
 async function runSeeds() {
   console.log('🌱 Initializing Database Connection for Seeding...');
@@ -41,6 +44,15 @@ async function runSeeds() {
 
     console.log('🌱 Running Departments Seed...');
     await seedDepartments(AppDataSource);
+
+    console.log('🌱 Running Court Committee Members Seed...');
+    await seedCourtMembers(AppDataSource);
+
+    console.log('🌱 Running Court Proceedings Seed...');
+    await seedCourtProceedings(AppDataSource);
+
+    console.log('🌱 Running Court Sessions Seed...');
+    await seedCourtSessions(AppDataSource);
 
     console.log('🎉 All seeds completed successfully!');
   } catch (error) {

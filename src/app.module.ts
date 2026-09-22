@@ -28,6 +28,9 @@ import { GlanceModule } from './glance/glance.module';
 import { DepartmentModule } from './department/department.module';
 import { CommitteeModule } from './committee/committee.module';
 import { ResolutionModule } from './resolution/resolution.module';
+import { CourtMemberModule } from './court-member/court-member.module';
+import { CourtProceedingModule } from './court-proceeding/court-proceeding.module';
+import { CourtSessionModule } from './court-session/court-session.module';
 
 @Module({
   imports: [
@@ -62,7 +65,7 @@ import { ResolutionModule } from './resolution/resolution.module';
         logging: configService.get<string>('NODE_ENV') === 'development',
         ssl:
           configService.get<string>('NODE_ENV') === 'production' ||
-          configService.get<string>('DB_SSL') === 'true'
+            configService.get<string>('DB_SSL') === 'true'
             ? { rejectUnauthorized: false }
             : false,
       }),
@@ -111,8 +114,11 @@ import { ResolutionModule } from './resolution/resolution.module';
     DepartmentModule,
     CommitteeModule,
     ResolutionModule,
+    CourtMemberModule,
+    CourtProceedingModule,
+    CourtSessionModule,
   ],
   providers: [AppService],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }
