@@ -20,6 +20,18 @@ export class HighlightDto {
   value: string;
 }
 
+export class GalleryItemDto {
+  @ApiProperty({ example: 'https://cdn.lonavalamc.gov.in/projects/site1.jpg' })
+  @IsString()
+  @IsNotEmpty()
+  url: string;
+
+  @ApiPropertyOptional({ example: 'Excavation & Laying Works' })
+  @IsString()
+  @IsOptional()
+  title?: string;
+}
+
 export class CreateProjectDto {
   @ApiProperty({ example: 'Lonavala Underground Drainage & STP Project' })
   @IsString()
@@ -98,6 +110,14 @@ export class CreateProjectDto {
   @IsArray()
   @IsOptional()
   highlights?: HighlightDto[];
+
+  @ApiPropertyOptional({
+    type: [GalleryItemDto],
+    example: [{ url: 'https://cdn.lonavalamc.gov.in/projects/site1.jpg', title: 'Excavation Progress' }],
+  })
+  @IsArray()
+  @IsOptional()
+  gallery?: GalleryItemDto[];
 
   @ApiPropertyOptional({ example: 'https://cdn.lonavalamc.gov.in/projects/stp.jpg' })
   @IsString()

@@ -26,7 +26,7 @@ export class TourismService {
     private readonly highlightRepo: Repository<TourismHighlight>,
     @InjectRepository(TourismGalleryMedia)
     private readonly galleryRepo: Repository<TourismGalleryMedia>,
-  ) {}
+  ) { }
 
   private mapSpotToDto(spot: TourismSpot): TourismSpotDto {
     const sortedPoints: ImportantPointDto[] = (spot.importantPoints || [])

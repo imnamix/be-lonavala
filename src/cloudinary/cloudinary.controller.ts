@@ -1,13 +1,18 @@
 import {
   Controller,
+  Get,
   Post,
   Delete,
   Param,
   Query,
+  Res,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { Response } from 'express';
+import axios from 'axios';
 import {
   ApiTags,
   ApiOperation,
@@ -29,6 +34,56 @@ import {
 @Controller('cloudinary')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
+
+  @Get('signed-url')
+  @ApiOperation({
+    summary: 'Get signed URL for a Cloudinary file to bypass ACL restrictions',
+  })
+  @ApiQuery({ name: 'url', required: true, description: 'Cloudinary asset URL' })
+  getSignedUrl(@Query('url') url: string) {
+    if (!url) {
+      throw new BadRequestException('URL parameter is required');
+    }
+    const signedUrl = this.cloudinaryService.generateSignedUrl(url);
+    return {
+      success: true,
+      url: signedUrl,
+    };
+  }
+
+  @Get('view')
+  @ApiOperation({
+    summary: 'Stream file from Cloudinary with inline Content-Disposition to prevent download and 401 ACL error',
+  })
+  @ApiQuery({ name: 'url', required: true, description: 'Cloudinary asset URL' })
+  async streamFile(
+    @Query('url') fileUrl: string,
+    @Res() res: Response,
+  ) {
+    if (!fileUrl) {
+      throw new BadRequestException('url parameter is required');
+    }
+
+    try {
+      const targetUrl = this.cloudinaryService.generateSignedUrl(fileUrl);
+      const response = await axios.get(targetUrl, {
+        responseType: 'stream',
+      });
+
+      const rawContentType = response.headers['content-type'];
+      const contentType = typeof rawContentType === 'string'
+        ? rawContentType
+        : (fileUrl.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream');
+
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', 'inline');
+      response.data.pipe(res);
+    } catch (err: any) {
+      // Fallback redirect to signed URL
+      const fallbackUrl = this.cloudinaryService.generateSignedUrl(fileUrl);
+      return res.redirect(fallbackUrl);
+    }
+  }
 
   @Post('upload')
   @ApiOperation({

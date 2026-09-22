@@ -38,7 +38,7 @@ export class CreateCouncilMemberDto {
   @IsOptional()
   ward?: string;
 
-  @ApiPropertyOptional({ description: 'Tenure period', example: '2022 - 2027' })
+  @ApiPropertyOptional({ description: 'Tenure period', example: '2024 - 2029' })
   @IsString()
   @IsOptional()
   tenure?: string;

@@ -4,6 +4,10 @@ import { seedAboutUs } from './about-us.seed';
 import { seedTourism } from './tourism.seed';
 import { seedContacts } from './contacts.seed';
 import { seedFaq } from './faq.seed';
+import { seedGlance } from './glance.seed';
+import { seedNotices } from './notice.seed';
+import { seedProjects } from './project.seed';
+import { seedDepartments } from './department.seed';
 
 async function runSeeds() {
   console.log('🌱 Initializing Database Connection for Seeding...');
@@ -25,6 +29,18 @@ async function runSeeds() {
 
     console.log('🌱 Running FAQ Seed...');
     await seedFaq(AppDataSource);
+
+    console.log('🌱 Running Glance Metrics Seed...');
+    await seedGlance(AppDataSource);
+
+    console.log('🌱 Running Notices Seed...');
+    await seedNotices(AppDataSource);
+
+    console.log('🌱 Running Projects Seed...');
+    await seedProjects(AppDataSource);
+
+    console.log('🌱 Running Departments Seed...');
+    await seedDepartments(AppDataSource);
 
     console.log('🎉 All seeds completed successfully!');
   } catch (error) {

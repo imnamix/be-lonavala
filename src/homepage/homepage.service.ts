@@ -28,7 +28,7 @@ export class HomepageService {
     private readonly tagRepo: Repository<HomepageSlideTag>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async getHomepage(activeOnly = false): Promise<{ homepage: HomepageContentDto }> {
     // 1. Fetch site announcement configuration

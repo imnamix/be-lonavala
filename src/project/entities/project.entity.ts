@@ -12,6 +12,12 @@ export interface ProjectHighlight {
   value: string;
 }
 
+export interface ProjectGalleryItem {
+  id?: string;
+  url: string;
+  title: string;
+}
+
 @Entity('project')
 export class Project {
   @PrimaryGeneratedColumn()
@@ -81,6 +87,12 @@ export class Project {
   })
   @Column({ type: 'jsonb', default: [] })
   highlights: ProjectHighlight[];
+
+  @ApiProperty({
+    example: [{ url: 'https://cdn.lonavalamc.gov.in/projects/site1.jpg', title: 'Excavation Progress' }],
+  })
+  @Column({ type: 'jsonb', default: [] })
+  gallery: ProjectGalleryItem[];
 
   @ApiProperty({
     example: 'https://cdn.lonavalamc.gov.in/projects/stp.jpg',

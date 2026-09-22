@@ -35,8 +35,8 @@ export class CouncilMember {
   @Column({ type: 'varchar', length: 200, default: 'Municipal Council' })
   ward: string;
 
-  @ApiProperty({ description: 'Tenure period', default: '2022 - 2027' })
-  @Column({ type: 'varchar', length: 100, default: '2022 - 2027' })
+  @ApiProperty({ description: 'Tenure period', default: '2024 - 2029' })
+  @Column({ type: 'varchar', length: 100, default: '2024 - 2029' })
   tenure: string;
 
   @ApiProperty({ description: 'Assigned committee', nullable: true })

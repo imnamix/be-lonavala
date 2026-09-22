@@ -13,7 +13,7 @@ export class CouncilService {
   constructor(
     @InjectRepository(CouncilMember)
     private readonly councilRepo: Repository<CouncilMember>,
-  ) {}
+  ) { }
 
   async findAll(query?: QueryCouncilMemberDto): Promise<CouncilMember[]> {
     const qb = this.councilRepo.createQueryBuilder('m');
@@ -67,7 +67,7 @@ export class CouncilService {
       designation: dto.designation,
       roleCategory: dto.roleCategory ?? 'Corporator',
       ward: dto.ward ?? 'Municipal Council',
-      tenure: dto.tenure ?? '2022 - 2027',
+      tenure: dto.tenure ?? '2024 - 2029',
       committee: dto.committee ?? null,
       phone: dto.phone ?? '',
       email: dto.email ?? '',

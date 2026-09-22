@@ -24,6 +24,10 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { FaqModule } from './faq/faq.module';
 import { NoticeModule } from './notice/notice.module';
 import { ProjectModule } from './project/project.module';
+import { GlanceModule } from './glance/glance.module';
+import { DepartmentModule } from './department/department.module';
+import { CommitteeModule } from './committee/committee.module';
+import { ResolutionModule } from './resolution/resolution.module';
 
 @Module({
   imports: [
@@ -103,6 +107,10 @@ import { ProjectModule } from './project/project.module';
     FaqModule,
     NoticeModule,
     ProjectModule,
+    GlanceModule,
+    DepartmentModule,
+    CommitteeModule,
+    ResolutionModule,
   ],
   providers: [AppService],
   controllers: [AppController],

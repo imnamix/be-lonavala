@@ -46,13 +46,26 @@ export class CloudinaryStorageProvider implements StorageProvider {
     const folder = lastSlash !== -1 ? key.substring(0, lastSlash) : 'uploads';
     const publicIdWithExt = lastSlash !== -1 ? key.substring(lastSlash + 1) : key;
     const publicId = publicIdWithExt.replace(/\.[^/.]+$/, '');
+    const isRasterImage =
+      (mimeType?.startsWith('image/') ||
+        Boolean(
+          key?.match(/\.(jpg|jpeg|png|webp|gif|bmp|tiff|avif|heic)$/i),
+        )) &&
+      !mimeType?.includes('svg') &&
+      !key.toLowerCase().endsWith('.svg');
 
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder,
           public_id: publicId,
-          resource_type: 'auto',
+          resource_type: isRasterImage ? 'image' : 'auto',
+          ...(isRasterImage
+            ? {
+                format: 'webp',
+                transformation: [{ quality: 'auto:good', fetch_format: 'webp' }],
+              }
+            : {}),
         },
         (error: UploadApiErrorResponse, result: UploadApiResponse) => {
           if (error) {
@@ -64,7 +77,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
             url: result.secure_url || result.url,
             key: result.public_id,
             bucket: 'cloudinary',
-            mimeType: mimeType || result.format,
+            mimeType: isRasterImage ? 'image/webp' : (mimeType || result.format),
             size: result.bytes,
           });
         },
