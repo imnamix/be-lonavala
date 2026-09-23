@@ -117,10 +117,9 @@ export class EN_User {
   // EN_User entity
 
   toResponseObject(showToken: boolean = true): UserRO {
-    const roleData: any = this.roles.role || null;
-    const permissionArray: any = this.roles.permissions.map(
-      (permission) => permission.permission,
-    );
+    const roleData: any = this.roles?.role || null;
+    const permissionArray: any =
+      this.roles?.permissions?.map((permission) => permission.permission) || [];
 
     let accessToken: string;
     if (showToken) {
@@ -134,10 +133,14 @@ export class EN_User {
       middleName: this.middleName,
       phone: this.phone,
       email: this.email,
+      gender: this.gender,
+      isVerified: this.isVerified,
       createdDate: this.createdDate,
       updatedDate: this.updatedDate,
       createdBy: this.createdBy,
       updatedBy: this.updatedBy,
+      roleId: this.roles?.id || null,
+      roleName: roleData,
       roles: roleData,
       permissions: permissionArray,
       accessToken,

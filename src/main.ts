@@ -29,9 +29,21 @@ async function bootstrap() {
   // ── CORS ───────────────────────────────────────────────────────────────────
   const corsOrigins = (
     process.env.CORS_ORIGIN || 'http://localhost:3000'
-  ).split(',');
+  ).split(',').map((o) => o.trim());
+
   app.enableCors({
-    origin: corsOrigins,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        origin.includes('localhost') ||
+        origin.includes('127.0.0.1') ||
+        corsOrigins.includes(origin) ||
+        process.env.NODE_ENV !== 'production'
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: [
@@ -42,6 +54,7 @@ async function bootstrap() {
       'X-Requested-With',
       'x-access-token',
       'baggage',
+      'sentry-trace',
     ],
   });
 

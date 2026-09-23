@@ -31,6 +31,9 @@ import { ResolutionModule } from './resolution/resolution.module';
 import { CourtMemberModule } from './court-member/court-member.module';
 import { CourtProceedingModule } from './court-proceeding/court-proceeding.module';
 import { CourtSessionModule } from './court-session/court-session.module';
+import { CitizenModule } from './citizen/citizen.module';
+import { GrievanceModule } from './grievance/grievance.module';
+import { ImportantUpdateModule } from './important-update/important-update.module';
 
 @Module({
   imports: [
@@ -117,6 +120,9 @@ import { CourtSessionModule } from './court-session/court-session.module';
     CourtMemberModule,
     CourtProceedingModule,
     CourtSessionModule,
+    CitizenModule,
+    GrievanceModule,
+    ImportantUpdateModule,
   ],
   providers: [AppService],
   controllers: [AppController],

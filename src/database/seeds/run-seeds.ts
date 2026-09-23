@@ -11,6 +11,8 @@ import { seedDepartments } from './department.seed';
 import { seedCourtMembers } from './court-member.seed';
 import { seedCourtProceedings } from './court-proceeding.seed';
 import { seedCourtSessions } from './court-session.seed';
+import { seedSuperadmin } from './superadmin.seed';
+import { seedImportantUpdates } from './important-update.seed';
 
 async function runSeeds() {
   console.log('🌱 Initializing Database Connection for Seeding...');
@@ -53,6 +55,12 @@ async function runSeeds() {
 
     console.log('🌱 Running Court Sessions Seed...');
     await seedCourtSessions(AppDataSource);
+
+    console.log('🌱 Running Superadmin & Roles Seed...');
+    await seedSuperadmin(AppDataSource);
+
+    console.log('🌱 Running Important Updates Seed...');
+    await seedImportantUpdates(AppDataSource);
 
     console.log('🎉 All seeds completed successfully!');
   } catch (error) {

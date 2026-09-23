@@ -6,7 +6,12 @@ export class UserRO {
   phone?: string;
   email?: string;
   gender?: string;
-  roles: string;
+  isVerified?: boolean;
+  roleId?: number;
+  roleName?: string;
+  roles: any;
+  permissions?: string[];
+  accessToken?: string;
   createdDate?: Date;
   updatedDate?: Date;
   createdBy?: number;

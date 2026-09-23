@@ -28,3 +28,25 @@ export enum permissions {
   DELETE = 'DELETE',
   MANAGE = 'MANAGE',
 }
+
+export enum GrievanceCategory {
+  ROAD = 'ROAD',
+  WATER = 'WATER',
+  SANITATION = 'SANITATION',
+  ELECTRICITY = 'ELECTRICITY',
+  BUILDING = 'BUILDING',
+  NOISE = 'NOISE',
+  DRAINAGE = 'DRAINAGE',
+  STREET_LIGHT = 'STREET_LIGHT',
+  GARBAGE = 'GARBAGE',
+  OTHER = 'OTHER',
+}
+
+export enum GrievanceStatus {
+  PENDING = 'PENDING',
+  ASSIGNED = 'ASSIGNED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED',
+  CLOSED = 'CLOSED',
+  REJECTED = 'REJECTED',
+}

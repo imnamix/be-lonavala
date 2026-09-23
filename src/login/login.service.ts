@@ -21,27 +21,42 @@ export class LoginService {
   ) {}
 
   async login(obj: loginRexDTO) {
+    const email = obj.email?.trim().toLowerCase();
     let user = await this.userRepo
       .createQueryBuilder('user')
       .addSelect('user.password')
-      .where('user.email = :email', { email: obj.email })
-      .andWhere('user.isVerified = :flag', { flag: true })
+      .where('LOWER(user.email) = LOWER(:email)', { email })
       .getOne();
-    
+
     if (!user) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: 'Email Is Invalid',
+          error: 'Invalid credentials. User not found with this email.',
           errorCode: 'EC001',
         },
         HttpStatus.BAD_REQUEST,
       );
     }
 
+    if (!user.isVerified) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Your account is not verified. Please contact administrator.',
+          errorCode: 'EC003',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     if (!(await user.comparePassword(obj.password))) {
       throw new HttpException(
-        { status: HttpStatus.BAD_REQUEST, error: 'Invalid Password' },
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Invalid password. Please check your credentials.',
+          errorCode: 'EC002',
+        },
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -51,7 +66,14 @@ export class LoginService {
       relations: ['roles', 'roles.permissions'],
     });
 
-    return await userWithRoles.toResponseObject();
+    const userRO = userWithRoles.toResponseObject();
+
+    return {
+      success: true,
+      message: 'Login successful',
+      data: userRO,
+      ...userRO,
+    };
   }
 
   async verify(obj) {
