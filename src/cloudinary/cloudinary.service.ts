@@ -46,13 +46,18 @@ export class CloudinaryService {
       file.mimetype?.includes('msword') ||
       Boolean(file.originalname?.match(/\.(pdf|doc|docx|xls|xlsx|csv|zip)$/i));
 
+    const isVideo =
+      file.mimetype?.startsWith('video/') ||
+      Boolean(file.originalname?.match(/\.(mp4|mov|webm|avi|mkv|wmv|flv|m4v|3gp)$/i));
+
     const isImage =
       (file.mimetype?.startsWith('image/') ||
         Boolean(
           file.originalname?.match(/\.(jpg|jpeg|png|webp|gif|bmp|tiff|avif|heic)$/i),
         )) &&
       !file.mimetype?.includes('svg') &&
-      !file.originalname?.toLowerCase().endsWith('.svg');
+      !file.originalname?.toLowerCase().endsWith('.svg') &&
+      !isVideo;
 
     const cleanFilename = file.originalname
       ? file.originalname.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '_')
@@ -66,7 +71,7 @@ export class CloudinaryService {
     const uploadOptions: UploadApiOptions = {
       folder,
       public_id: publicId,
-      resource_type: isDocument ? 'raw' : 'auto',
+      resource_type: isDocument ? 'raw' : isVideo ? 'video' : isImage ? 'image' : 'auto',
       access_mode: 'public',
       type: 'upload',
       ...(isImage
@@ -87,7 +92,7 @@ export class CloudinaryService {
       const uploadRecord = this.fileUploadRepo.create({
         fileName: file.originalname,
         fileSize: file.size || result.bytes,
-        fileType: isImage ? 'image/webp' : (file.mimetype || result.format),
+        fileType: isVideo ? (file.mimetype || 'video/mp4') : isImage ? 'image/webp' : (file.mimetype || result.format),
         fileTitle: file.originalname,
         bucket: 'cloudinary',
         fileUrl: formattedUrl,
@@ -198,12 +203,17 @@ export class CloudinaryService {
 
     try {
       // Regex to extract resourceType, version, and publicId
-      // e.g. https://res.cloudinary.com/mpo7ijbf/raw/upload/v1790018361/lonavala/notices/xyz.pdf
       const regex = /res\.cloudinary\.com\/[^/]+\/([^/]+)\/upload\/(?:[a-zA-Z0-9_,]+--\/)?(?:v\d+\/)?(.+?)$/;
       const match = fileUrl.match(regex);
       if (match) {
-        const resourceType = match[1] === 'raw' ? 'raw' : 'image';
-        const publicId = match[2];
+        const detectedType = match[1];
+        const resourceType: 'image' | 'video' | 'raw' =
+          detectedType === 'raw'
+            ? 'raw'
+            : detectedType === 'video' || fileUrl.includes('/video/')
+            ? 'video'
+            : 'image';
+        const publicId = match[2].split('?')[0];
         return cloudinary.utils.url(publicId, {
           resource_type: resourceType,
           sign_url: true,
@@ -223,11 +233,16 @@ export class CloudinaryService {
     result: UploadApiResponse,
     originalFilename?: string,
   ): CloudinaryResponseDto {
-    const isRaw = result.resource_type === 'raw';
+    const resourceType: 'image' | 'video' | 'raw' =
+      result.resource_type === 'raw'
+        ? 'raw'
+        : result.resource_type === 'video'
+        ? 'video'
+        : 'image';
     
-    // Generate signed URL with Cloudinary security signature
+    // Generate signed URL with Cloudinary security signature and correct resource_type
     let secureUrl = cloudinary.utils.url(result.public_id, {
-      resource_type: isRaw ? 'raw' : 'image',
+      resource_type: resourceType,
       sign_url: true,
       secure: true,
       version: result.version,
@@ -254,3 +269,4 @@ export class CloudinaryService {
     };
   }
 }
+
